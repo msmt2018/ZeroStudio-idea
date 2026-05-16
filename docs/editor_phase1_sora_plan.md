@@ -58,3 +58,9 @@
 1. [x] 新增 `DocumentTextNormalizer`，统一 LF/CRLF 规范化。
 2. [x] `PersistentEditorSession.save()` 落盘前按文档元信息规范化。
 3. [x] 新增规范化与保存链路测试。
+
+
+### Step 1.9：Workspace 管理门面（已启动）
+1. [x] 新增 `EditorWorkspaceManager` 统一 open/save 操作入口。
+2. [x] 新增 `EditorWorkspaceManagerImpl`（openFile/newScratch/saveActive/saveAll）。
+3. [x] 新增 manager 层测试覆盖活跃会话保存与批量保存。
