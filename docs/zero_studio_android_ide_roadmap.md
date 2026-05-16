@@ -125,7 +125,7 @@
 
 ## 5.2 技术路线
 1. 在 `:native:treesitter` 中引入 tree-sitter 核心与常见 grammar（C/C++/Rust/Kotlin/Java）。
-2. 使用 CMake 构建 `.so`，产出多 ABI（arm64-v8a, armeabi-v7a, x86_64）。
+2. 使用 CMake 构建 `.so`，当前首发仅产出并发布双 ABI：`arm64-v8a`、`armeabi-v7a`。
 3. Kotlin 侧封装 `TreeSitterBridge`。
 4. 与 Sora 的 token provider 对接，实现增量高亮。
 5. 后续再将部分逻辑替换为 Rust 实现（通过 `cbindgen + JNI`）。
@@ -181,6 +181,18 @@
 建议第一版先以 `minSdk 23` 落地，后续评估是否下探。
 
 ---
+
+
+### 7.1 APK ABI 打包策略（补充）
+- 首发安装包仅支持并发布：
+  - `arm64-v8a`（arm64）
+  - `armeabi-v7a`（arm-v7）
+- 发布策略建议：
+  - Google Play：使用 App Bundle + ABI split（自动分发）
+  - 非商店渠道：提供双独立 APK（`arm64-v8a.apk` 与 `armeabi-v7a.apk`）
+- Native 模块约束：
+  - `:native:pty`、`:native:treesitter` 必须同时产出上述双 ABI，禁止只发单 ABI。
+  - CI 增加 ABI 完整性检查，防止某个 `.so` 漏打包。
 
 ## 8. 分阶段研发路线图（重点：先做终端+编辑器主界面）
 
