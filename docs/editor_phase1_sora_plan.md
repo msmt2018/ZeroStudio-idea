@@ -107,3 +107,10 @@
 1. [x] 新增 `SearchInWorkspaceUseCase`，支持跨会话搜索聚合结果。
 2. [x] 新增 `EditorDashboardAssembler`，一次性聚合 coordinator/sessions/recent 状态。
 3. [x] 新增对应测试，覆盖搜索过滤与仪表盘快照。
+
+
+### Step 2.7：批处理用例（已启动）
+1. [x] 新增 `OpenManyEditorsUseCase`，支持多文件批量打开（去重+失败收集）。
+2. [x] 新增 `SaveDirtyEditorsUseCase`，批量触发 dirty 会话保存。
+3. [x] 新增 `CloseAllEditorsUseCase`，统一关闭全部会话。
+4. [x] 新增批处理测试，覆盖成功/失败/真实落盘。
