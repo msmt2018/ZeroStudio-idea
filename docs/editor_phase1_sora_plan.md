@@ -69,3 +69,9 @@
 ### Step 2.0：应用层用例封装（已启动）
 1. [x] 新增 `OpenEditorUseCase` / `SaveEditorUseCase`，屏蔽 UI 对 workspace 细节的直接依赖。
 2. [x] 新增 usecase 实现与测试，为后续 ViewModel 层接入做准备。
+
+
+### Step 2.1：ViewModel 协调层前置（已启动）
+1. [x] 新增 `EditorCoordinator` / `EditorUiState`，统一 UI 观察状态。
+2. [x] 新增 `EditorCoordinatorImpl`，串联 open/save usecases 与 workspace。
+3. [x] 新增 coordinator 测试，校验 open/save 后 uiState 刷新。
