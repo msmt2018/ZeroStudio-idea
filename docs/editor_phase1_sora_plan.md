@@ -148,3 +148,9 @@
 ### Step 3.3：阶段进度程序化表达（已启动）
 1. [x] 新增 `EditorPhasePlanProgress`，在代码层给出阶段 checkpoint 与完成率。
 2. [x] 新增进度测试，验证完成率计算。
+
+
+### Step 3.4：工作区符号索引（已启动）
+1. [x] 新增 `IndexWorkspaceSymbolsUseCase` 与 `IndexedSymbol` 模型。
+2. [x] 新增 `WorkspaceSymbolIndexer`，支持重建索引与前缀检索。
+3. [x] 新增符号索引测试，覆盖 class/fun 解析与 prefix 过滤。
