@@ -105,4 +105,28 @@ class InMemoryEditorSessionTest {
         assertFailsWith<IllegalStateException> { session.save() }
         assertFailsWith<IllegalStateException> { session.goTo(1, 1) }
     }
+
+
+    @Test
+    fun `replace range clamps oversized bounds`() = runTest {
+        val session = InMemoryEditorSession(SessionId("s10"), null, "abc", testMeta())
+        session.execute(EditorCommand.ReplaceRange(TextRange(-100, 9999), "Z"))
+        assertEquals("Z", session.state.value.text)
+    }
+
+    @Test
+    fun `stats on empty text returns one line and zero chars`() = runTest {
+        val session = InMemoryEditorSession(SessionId("s11"), null, "", testMeta())
+        val stats = session.stats()
+        assertEquals(0, stats.charCount)
+        assertEquals(1, stats.lineCount)
+    }
+
+    @Test
+    fun `find with empty query returns empty list`() = runTest {
+        val session = InMemoryEditorSession(SessionId("s12"), null, "abcdef", testMeta())
+        val matches = session.find("")
+        assertTrue(matches.isEmpty())
+    }
+
 }
