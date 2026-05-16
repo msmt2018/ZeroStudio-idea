@@ -160,3 +160,9 @@
 1. [x] 新增 `BulkReplaceInWorkspaceUseCase` 与请求/结果模型。
 2. [x] 支持大小写策略与跨会话批量替换。
 3. [x] 新增 bulk replace 测试，覆盖计数与空查询短路。
+
+
+### Step 3.6：App 装配门面（已启动）
+1. [x] 新增 `EditorOpenFilesService`，统一 open/openMany 入口。
+2. [x] 新增 `EditorCoreFacade` + `EditorCoreFacadeFactory`，聚合核心用例装配。
+3. [x] 新增 facade/service 测试，验证可用性与搜索/导出链路。
