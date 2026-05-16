@@ -39,7 +39,11 @@ class PersistentEditorSession(
     override suspend fun save() {
         val path = filePath
         if (!path.isNullOrBlank()) {
-            store.save(path, state.value.text, state.value.documentMeta.charset)
+            val normalized = DocumentTextNormalizer.normalizeLineEnding(
+                state.value.text,
+                state.value.documentMeta.lineEnding,
+            )
+            store.save(path, normalized, state.value.documentMeta.charset)
         }
         delegate.save()
     }

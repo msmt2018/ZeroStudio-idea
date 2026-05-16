@@ -52,3 +52,9 @@
 1. [x] 新增 `PersistentEditorSession`，在 `save()` 时将文本写回文件系统。
 2. [x] `PersistentEditorSessionFactory` 返回可落盘 session。
 3. [x] 新增保存落盘单测（factory -> session -> save -> file）。
+
+
+### Step 1.8：换行符规范化策略（已启动）
+1. [x] 新增 `DocumentTextNormalizer`，统一 LF/CRLF 规范化。
+2. [x] `PersistentEditorSession.save()` 落盘前按文档元信息规范化。
+3. [x] 新增规范化与保存链路测试。
