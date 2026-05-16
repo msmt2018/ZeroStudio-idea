@@ -64,3 +64,8 @@
 1. [x] 新增 `EditorWorkspaceManager` 统一 open/save 操作入口。
 2. [x] 新增 `EditorWorkspaceManagerImpl`（openFile/newScratch/saveActive/saveAll）。
 3. [x] 新增 manager 层测试覆盖活跃会话保存与批量保存。
+
+
+### Step 2.0：应用层用例封装（已启动）
+1. [x] 新增 `OpenEditorUseCase` / `SaveEditorUseCase`，屏蔽 UI 对 workspace 细节的直接依赖。
+2. [x] 新增 usecase 实现与测试，为后续 ViewModel 层接入做准备。
