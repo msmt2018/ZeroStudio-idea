@@ -41,3 +41,8 @@
 1. [x] 新增 `EditorDocumentStore` 持久化抽象。
 2. [x] 新增 `FileEditorDocumentStore` 文件读写实现（JVM 参考版）。
 3. [x] 新增 `PersistentEditorSessionFactory`，支持从路径加载会话。
+
+
+### Step 1.6：Workspace 打开文件链路（已启动）
+1. [x] 新增 `PersistentEditorWorkspace`，支持 `newSession(filePath)` 直接打开文件。
+2. [x] 新增 workspace 级测试，校验打开/激活/关闭链路。
