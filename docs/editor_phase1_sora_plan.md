@@ -87,3 +87,10 @@
 1. [x] 新增 `EditorRecentFilesStore` 抽象与内存实现。
 2. [x] 新增 `TrackingOpenEditorUseCase`，在 open 成功后记录最近文件。
 3. [x] 新增 recent/track 测试，覆盖去重、置顶、容量限制。
+
+
+### Step 2.4：会话列表/关闭/最近文件用例（已启动）
+1. [x] 新增 `ObserveEditorSessionsUseCase`，为 UI 标签栏/侧栏提供会话状态列表。
+2. [x] 新增 `CloseEditorSessionUseCase`，统一关闭会话入口。
+3. [x] 新增 `RecentFilesUseCase`，支持 recent 列表展示与清空。
+4. [x] 新增对应测试，覆盖 active/dirty、关闭、recent 清空。
