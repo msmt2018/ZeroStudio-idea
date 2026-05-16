@@ -114,3 +114,9 @@
 2. [x] 新增 `SaveDirtyEditorsUseCase`，批量触发 dirty 会话保存。
 3. [x] 新增 `CloseAllEditorsUseCase`，统一关闭全部会话。
 4. [x] 新增批处理测试，覆盖成功/失败/真实落盘。
+
+
+### Step 2.8：编辑器指标与可观测性（已启动）
+1. [x] 新增 `EditorMetricsCollector` 与 `EditorMetricsUseCase`。
+2. [x] 为批处理与 autosave 增加 metrics 装饰器。
+3. [x] 新增 metrics 单测，覆盖记录/快照/重置与装饰器行为。
