@@ -46,3 +46,9 @@
 ### Step 1.6：Workspace 打开文件链路（已启动）
 1. [x] 新增 `PersistentEditorWorkspace`，支持 `newSession(filePath)` 直接打开文件。
 2. [x] 新增 workspace 级测试，校验打开/激活/关闭链路。
+
+
+### Step 1.7：保存链路落盘（已启动）
+1. [x] 新增 `PersistentEditorSession`，在 `save()` 时将文本写回文件系统。
+2. [x] `PersistentEditorSessionFactory` 返回可落盘 session。
+3. [x] 新增保存落盘单测（factory -> session -> save -> file）。
