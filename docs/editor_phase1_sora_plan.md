@@ -81,3 +81,9 @@
 1. [x] 新增 `EditorAutosaveController` 抽象。
 2. [x] 新增 `EditorAutosaveControllerImpl`，支持仅保存 dirty 且 file-backed 会话。
 3. [x] 新增 autosave 测试，覆盖 dirty/clean/scratch 三类会话。
+
+
+### Step 2.3：最近打开文件追踪（已启动）
+1. [x] 新增 `EditorRecentFilesStore` 抽象与内存实现。
+2. [x] 新增 `TrackingOpenEditorUseCase`，在 open 成功后记录最近文件。
+3. [x] 新增 recent/track 测试，覆盖去重、置顶、容量限制。
