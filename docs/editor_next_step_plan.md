@@ -8,11 +8,11 @@
 ## 下一步目标（本周）
 1. 完成编辑器“可用性 API”
    - [x] 会话内全文搜索 `find(query, options)`
-   - [ ] 跳转行列 `goTo(line, column)`（可复用 MoveCursor）
+   - [ ] 跳转行列 `goTo(line, column)`（可复用 MoveCursor）【进行中：已具备 MoveCursor，待补语义化 API】
    - [ ] 文本统计接口（行数、字符数）
 2. 可靠性增强
    - [ ] close 后调用防御测试
-   - [ ] 边界 case（空文本、超大 range、空 query）测试
+   - [ ] 边界 case（空文本、超大 range、空 query）测试【进行中：已覆盖空 query 返回空列表】
 3. 与 UI 对接准备
    - [ ] 增加 `EditorViewAdapter` 接口草案（为 Sora 适配做桥接）
    - [ ] 增加 `EditorCommand` -> 快捷键映射表
