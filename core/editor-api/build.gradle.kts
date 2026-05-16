@@ -1,12 +1,11 @@
 plugins {
-    kotlin("jvm")
+    alias(libs.plugins.kotlin.jvm)
 }
 
 kotlin {
     jvmToolchain(17)
 }
 
-
 dependencies {
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+    api(libs.kotlinx.coroutines.core)
 }
