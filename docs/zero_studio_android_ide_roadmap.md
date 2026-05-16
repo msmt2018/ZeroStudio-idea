@@ -41,12 +41,17 @@
   - 文件树展开：`animateContentSize`
 
 ## 2.4 异步与事件机制
-- Kotlin Coroutines + Flow/StateFlow。
+- 异步能力不直接散落在业务模块中，统一通过 `:core:concurrency-api` 对外提供。
+- `:core:concurrency-api` 建议接口：
+  - `DispatcherProvider`：统一提供 `io/default/main/immediate` 调度器
+  - `FlowUseCase<T>`：标准化用例流式执行协议
+  - `UiStateStore<S, E>`：基于 `StateFlow` 的状态容器抽象
+  - `EventStream<E>`：基于 `SharedFlow` 的一次性事件通道抽象
 - 线程模型：
   - IO：文件读写、rootfs 解压、插件扫描
   - Default：索引/语法树解析
   - Main：UI 状态分发
-- 事件总线建议：基于 `SharedFlow<DomainEvent>` 实现订阅线程，避免全局粘性事件滥用。
+- 事件订阅建议：所有 feature 仅依赖 `:core:concurrency-api` 暴露的接口，禁止直接持有全局可变事件总线。
 
 ---
 
@@ -55,6 +60,7 @@
 ## 3.1 建议模块结构（Monorepo）
 - `:app`
 - `:core:common`（Result、Dispatcher、日志、错误模型）
+- `:core:concurrency-api`（Coroutines / Flow / StateFlow 统一接口封装）
 - `:core:ui`（M3 主题、基础组件）
 - `:core:plugin-api`（插件接口）
 - `:core:action-api`（命令/动作接口）
@@ -197,8 +203,8 @@
 ## 8. 分阶段研发路线图（重点：先做终端+编辑器主界面）
 
 ## 阶段 0（1~2 周）：工程基建
-- 建立多模块骨架（app/core/feature/native/plugin-api）。
-- 落地 CI：lint、单元测试、构建。
+- 建立多模块骨架（app/core/feature/native/plugin-api），包含 `:core:concurrency-api`。
+- 落地 CI：lint、单元测试、构建、ABI/资源校验。
 - 统一代码规范（ktlint/detekt）。
 
 **交付物**
@@ -206,6 +212,7 @@
 - 插件 API、Action API 初版接口。
 
 ## 阶段 1（2~4 周）：IDE 主界面框架
+- 引导界面（Onboarding）与初始化状态机。
 - 主界面 Scaffold。
 - 左侧 Drawer + 侧栏插件注册/切换。
 - 中央工作区容器（编辑器/终端占位）。
@@ -269,6 +276,24 @@
 
 ---
 
+## 9.4 引导界面（Onboarding）与初始化流程
+
+由于 IDE 首次启动需要准备权限与运行资源，主界面前必须增加引导流程。
+
+- `OnboardingActivity/OnboardingRoute`：引导总入口（冷启动时优先进入）。
+- 引导步骤建议：
+  1. 欢迎与设备检查（CPU ABI、Android 版本、存储可用空间）
+  2. 权限引导（存储访问、通知、前台服务等按需申请）
+  3. 资源安装（终端 rootfs 基础资源、编辑器字体/主题、语法资源索引）
+  4. 完成页（校验通过后进入 IDE 主界面）
+- 状态持久化：
+  - 使用 `OnboardingStateRepository` 记录步骤完成状态与失败原因。
+  - 支持失败重试与断点续装（避免用户重复下载大资源）。
+- 与插件系统关系：
+  - 引导完成前，禁用依赖 rootfs/native 的插件入口，避免空页面与崩溃。
+
+---
+
 ## 10. 质量保障与工程治理
 
 - 单元测试：domain/data/plugin registry/action dispatcher
@@ -283,10 +308,10 @@
 
 ## 11. 你现在就可以启动的“第一批任务清单”（可直接执行）
 
-1. 初始化模块结构与基础依赖（Compose、Lifecycle、Navigation）。
+1. 初始化模块结构与基础依赖（Compose、Lifecycle、Navigation），新增 `:core:concurrency-api`。
 2. 完成 `core:plugin-api` + `core:action-api` 接口定义。
 3. 实现 `SidebarPluginRegistry` 与 `SidebarHostFragment`。
-4. 主界面完成左侧插件栏 + 中央容器 + 底部状态栏。
+4. 先完成引导界面（权限 + 资源安装），再进入主界面左侧插件栏 + 中央容器 + 底部状态栏。
 5. 接入 Sora 并打通“文件树点击打开文件”最短链路。
 6. 终端先做假会话（mock），验证 UI 与 session 管理流程。
 7. 再接 rootfs manager 与 pty bridge 真实能力。
