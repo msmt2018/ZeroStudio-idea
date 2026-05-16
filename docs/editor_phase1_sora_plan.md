@@ -101,3 +101,9 @@
 2. [x] 新增 `SmartEditorAutosaveController`，按偏好门控 autosave 触发。
 3. [x] 新增 `LimitedRecentFilesStore`，按偏好动态限制 recent 列表容量。
 4. [x] 新增偏好/自动保存/recent 策略测试。
+
+
+### Step 2.6：工作区搜索 + 仪表盘聚合（已启动）
+1. [x] 新增 `SearchInWorkspaceUseCase`，支持跨会话搜索聚合结果。
+2. [x] 新增 `EditorDashboardAssembler`，一次性聚合 coordinator/sessions/recent 状态。
+3. [x] 新增对应测试，覆盖搜索过滤与仪表盘快照。
