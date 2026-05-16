@@ -5,18 +5,18 @@
 - 当前阶段：**Phase 0.2（Editor Core）进行中**。
 - 统计口径：按 `docs/editor_next_step_plan.md` 的任务项逐条核对。
 - 任务总数：7 项（本周目标）。
-- 已完成：1 项。
-- 未完成：6 项。
-- 完成率：**14.3%**（1/7）。
+- 已完成：4 项。
+- 未完成：3 项。
+- 完成率：**57.1%**（4/7）。
 
 ---
 
 ## 2) 已完成工作
 
 1. ✅ 会话内全文搜索 `find(query, options)`
-   - API：`EditorSession.find(...)` 已定义。
-   - 实现：`InMemoryEditorSession.find(...)` 已完成。
-   - 测试：大小写不敏感/敏感两条用例已补充。
+2. ✅ 跳转行列 `goTo(line, column)`
+3. ✅ 文本统计接口（行数、字符数）
+4. ✅ close 后调用防御测试（execute/find/stats/save/goTo）
 
 ---
 

@@ -5,6 +5,7 @@ import android.zero.studio.editor.api.EditorCommand
 import android.zero.studio.editor.api.EditorDocumentMeta
 import android.zero.studio.editor.api.EditorEngine
 import android.zero.studio.editor.api.EditorSelection
+import android.zero.studio.editor.api.EditorStats
 import android.zero.studio.editor.api.EditorSession
 import android.zero.studio.editor.api.EditorSnapshot
 import android.zero.studio.editor.api.EditorWorkspace
@@ -111,6 +112,11 @@ class InMemoryEditorSession(
     }
 
 
+    override suspend fun goTo(line: Int, column: Int) {
+        ensureOpen()
+        updateCursor(line, column)
+    }
+
     override suspend fun find(query: String, options: SearchOptions): List<SearchMatch> {
         ensureOpen()
         if (query.isEmpty()) return emptyList()
@@ -129,6 +135,13 @@ class InMemoryEditorSession(
             from = end
         }
         return matches
+    }
+
+    override suspend fun stats(): EditorStats {
+        ensureOpen()
+        val t = state.value.text
+        val lineCount = if (t.isEmpty()) 1 else t.count { it == "\n"[0] } + 1
+        return EditorStats(charCount = t.length, lineCount = lineCount)
     }
 
     override suspend fun save() {

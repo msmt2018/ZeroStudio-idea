@@ -31,6 +31,11 @@ data class EditorDocumentMeta(
     val lineEnding: LineEnding,
 )
 
+data class EditorStats(
+    val charCount: Int,
+    val lineCount: Int,
+)
+
 data class EditorSnapshot(
     val text: String,
     val version: Long,
@@ -68,7 +73,9 @@ interface EditorSession {
     val state: StateFlow<EditorSnapshot>
 
     suspend fun execute(command: EditorCommand)
+    suspend fun goTo(line: Int, column: Int)
     suspend fun find(query: String, options: SearchOptions = SearchOptions()): List<SearchMatch>
+    suspend fun stats(): EditorStats
     suspend fun save()
     suspend fun close()
 }

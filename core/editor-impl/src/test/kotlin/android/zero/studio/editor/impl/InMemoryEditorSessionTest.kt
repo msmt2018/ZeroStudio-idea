@@ -1,12 +1,13 @@
 package android.zero.studio.editor.impl
 
 import android.zero.studio.editor.api.EditorCommand
-import SearchOptions
+import android.zero.studio.editor.api.SearchOptions
 import android.zero.studio.editor.api.SessionId
 import android.zero.studio.editor.api.TextRange
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -75,5 +76,33 @@ class InMemoryEditorSessionTest {
         val matches = session.find("Hello", options = SearchOptions(caseSensitive = true))
         assertEquals(1, matches.size)
         assertEquals("Hello", matches[0].text)
+    }
+
+    @Test
+    fun `goto updates cursor and clamps negative`() = runTest {
+        val session = InMemoryEditorSession(SessionId("s7"), null, "Hello", testMeta())
+        session.goTo(-1, -5)
+        assertEquals(0, session.state.value.cursor.line)
+        assertEquals(0, session.state.value.cursor.column)
+    }
+
+    @Test
+    fun `stats returns character and line count`() = runTest {
+        val session = InMemoryEditorSession(SessionId("s8"), null, "a\nb\n", testMeta())
+        val stats = session.stats()
+        assertEquals(4, stats.charCount)
+        assertEquals(3, stats.lineCount)
+    }
+
+    @Test
+    fun `operations after close should fail`() = runTest {
+        val session = InMemoryEditorSession(SessionId("s9"), null, "abc", testMeta())
+        session.close()
+
+        assertFailsWith<IllegalStateException> { session.execute(EditorCommand.Insert("x")) }
+        assertFailsWith<IllegalStateException> { session.find("a") }
+        assertFailsWith<IllegalStateException> { session.stats() }
+        assertFailsWith<IllegalStateException> { session.save() }
+        assertFailsWith<IllegalStateException> { session.goTo(1, 1) }
     }
 }
