@@ -132,3 +132,9 @@
 1. [x] 新增 `CommandPaletteUseCase` 与 `CommandPaletteItem`。
 2. [x] 提供内置命令（Save Dirty / Close All）与执行分发。
 3. [x] 新增命令面板测试，覆盖 list/execute/unknown。
+
+
+### Step 3.1：运行态导出与报告（已启动）
+1. [x] 新增 `ExportEditorStateUseCase`，支持导出当前会话快照。
+2. [x] 新增 `EditorSummaryReportBuilder`，聚合会话与指标生成 markdown 报告。
+3. [x] 新增导出/报告测试，覆盖 dirty 状态与 metrics 内容。
