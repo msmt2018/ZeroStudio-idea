@@ -65,6 +65,12 @@
 - `:core:plugin-api`（插件接口）
 - `:core:action-api`（命令/动作接口）
 - `:core:editor-api`（编辑器抽象，当前由 Sora 适配）
+- `:build:tooling-api:api`
+- `:build:tooling-api:events`
+- `:build:tooling-api:impl`
+- `:build:tooling-api:model`
+- `:build:tooling-api:plugin`
+- `:build:tooling-api:plugin-config`
 - `:feature:home`
 - `:feature:filetree`
 - `:feature:editor`
@@ -200,6 +206,75 @@
   - `:native:pty`、`:native:treesitter` 必须同时产出上述双 ABI，禁止只发单 ABI。
   - CI 增加 ABI 完整性检查，防止某个 `.so` 漏打包。
 
+
+## 7.2 双构建系统（Gradle + Bazel）统一驱动架构（重点补充）
+
+目标：两个构建系统最终都在终端会话中运行，IDE 通过“构建服务协议层”驱动并把状态回传到 UI。
+
+### A. 构建域总体分层
+- `BuildOrchestrator`（编排层）：接收 UI 构建请求，选择构建系统 + 协议 + 会话策略。
+- `BuildProtocolAdapter`（协议层）：BSP/JPS/内部二进制协议的统一适配接口。
+- `BuildDriver`（驱动层）：GradleDriver、BazelDriver（启动、停止、状态、日志、取消）。
+- `TerminalExecutionLayer`（执行层）：把具体命令落到 rootfs 终端 session 执行。
+- `BuildEventPipeline`（事件层）：标准化任务状态、进度、日志、测试结果、诊断。
+
+### B. Tooling API 模块拆分（按你要求）
+- `:build:tooling-api:api`：对外接口（BuildService、BuildRequest、BuildSession、BuildProtocol）。
+- `:build:tooling-api:events`：事件定义（Started/Progress/Log/Diagnostics/Test/Finished/Failed）。
+- `:build:tooling-api:impl`：协议适配与驱动实现（BSPAdapter/JpsAdapter/GradleDriver/BazelDriver）。
+- `:build:tooling-api:model`：构建模型（ProjectModel、ModuleGraph、DependencyGraph、RunConfig）。
+- `:build:tooling-api:plugin`：构建插件扩展点（注册新构建工具或协议扩展）。
+- `:build:tooling-api:plugin-config`：插件配置、策略开关、灰度发布配置。
+
+### C. 传输协议策略（设置页可切换，默认 BSP）
+- 默认协议：`BSP (JSON-RPC 2.0)`。
+- 可选协议：`JPS-style internal channel`（用于特定兼容模式/实验模式）。
+- 预留协议：`Custom IPC/Binary Long Connection`（高性能长连接）。
+- 设置页项建议：
+  - 默认协议选择（BSP/JPS/Custom）
+  - 失败自动降级（例如 BSP 失败 -> JPS 兼容）
+  - 日志级别、超时、重试次数、心跳间隔
+
+### D. Gradle 驱动方案（官方 Tooling API + 后台服务）
+- Gradle 侧首选：`Gradle Tooling API`。
+- Android 侧运行形态：
+  - `ForegroundService` 承载长时构建任务（通知栏展示进度与取消动作）
+  - `BuildService` 与 UI 通过 Binder/IPC 通信，避免 Activity 生命周期中断任务
+  - 终端层负责 Gradle Daemon 生命周期（启动、复用、停止）
+- 通信建议：
+  - IDE 内部：AIDL/Binder + 本地事件流
+  - 远程/扩展：BSP JSON-RPC over socket
+- 能力目标：
+  - `sync/import`、`assemble`、`test`、`run task`、`cancel`、`rerun with --stacktrace`
+
+### E. Bazel 驱动方案（Android 可行性与工作流）
+- 现实判断：Bazel 在 Android 手机端原生运行复杂度高，建议分两阶段：
+  1. P1：先在 rootfs 中通过已有 Linux 二进制或可行替代方案验证命令链路。
+  2. P2：若 P1 不稳定，再进入“源码拉取 + 交叉编译 + 裁剪”专项。
+- 关键前置：
+  - rootfs 工具链（gcc/clang/python/java）版本矩阵
+  - ABI 目标先锁定 `arm64-v8a`，再评估 `armeabi-v7a`
+  - 远程缓存/本地缓存目录规划（避免占满手机存储）
+- 工作流任务（建议写入 CI/自动化脚本）：
+  - 拉取 Bazel 源码 -> 选择版本 -> 配置交叉编译 -> 产物验签 -> rootfs 集成测试
+
+### F. 统一构建生命周期（UI 到终端）
+1. 用户在 IDE 点击“构建/运行”。
+2. `BuildOrchestrator` 读取设置（构建系统 + 协议）。
+3. 创建 `BuildSession` 并绑定终端会话。
+4. 协议层发起请求（默认 BSP）。
+5. 驱动层执行 Gradle/Bazel 命令并订阅日志。
+6. 事件总线回推 UI（进度条、日志面板、问题面板、通知栏）。
+7. 完成后写入构建历史与缓存元数据。
+
+### G. 核心风险与规避
+- 风险 1：Bazel 手机端可执行性不确定。
+  - 规避：先验证 rootfs 命令链路，再决定是否重投入源码编译。
+- 风险 2：长任务被系统回收。
+  - 规避：ForegroundService + WakeLock 最小化策略 + 断点恢复。
+- 风险 3：多协议并存导致复杂度上升。
+  - 规避：统一 `BuildProtocolAdapter` 接口，设置页只暴露必要选项。
+
 ## 8. 分阶段研发路线图（重点：先做终端+编辑器主界面）
 
 ## 阶段 0（1~2 周）：工程基建
@@ -250,8 +325,10 @@
 - 增量解析性能可接受。
 
 ## 阶段 5（持续）：构建系统与插件生态
-- Gradle Task 面板。
-- Bazel 命令面板与运行配置。
+- 完成 tooling-api 六模块（api/events/impl/model/plugin/plugin-config）。
+- Gradle Tooling API 服务化接入（ForegroundService + 通知 + 取消/重试）。
+- BSP 默认驱动 + 设置页协议切换（BSP/JPS/Custom 预留）。
+- Bazel rootfs 驱动 PoC 与可行性报告（必要时进入源码交叉编译专项）。
 - Action 插件市场雏形。
 
 ---
