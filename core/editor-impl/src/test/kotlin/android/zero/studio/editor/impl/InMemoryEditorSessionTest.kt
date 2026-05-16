@@ -1,6 +1,7 @@
 package android.zero.studio.editor.impl
 
 import android.zero.studio.editor.api.EditorCommand
+import SearchOptions
 import android.zero.studio.editor.api.SessionId
 import android.zero.studio.editor.api.TextRange
 import kotlinx.coroutines.test.runTest
@@ -58,5 +59,21 @@ class InMemoryEditorSessionTest {
 
         session.save()
         assertFalse(session.state.value.isDirty)
+    }
+
+    @Test
+    fun `find returns case insensitive matches by default`() = runTest {
+        val session = InMemoryEditorSession(SessionId("s5"), null, "Hello hello HeLLo", testMeta())
+        val matches = session.find("hello")
+        assertEquals(3, matches.size)
+        assertEquals("Hello", matches[0].text)
+    }
+
+    @Test
+    fun `find respects case sensitive option`() = runTest {
+        val session = InMemoryEditorSession(SessionId("s6"), null, "Hello hello", testMeta())
+        val matches = session.find("Hello", options = SearchOptions(caseSensitive = true))
+        assertEquals(1, matches.size)
+        assertEquals("Hello", matches[0].text)
     }
 }

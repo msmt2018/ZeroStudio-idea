@@ -42,6 +42,15 @@ data class EditorSnapshot(
     val documentMeta: EditorDocumentMeta,
 )
 
+data class SearchOptions(
+    val caseSensitive: Boolean = false,
+)
+
+data class SearchMatch(
+    val range: TextRange,
+    val text: String,
+)
+
 sealed interface EditorCommand {
     data class SetText(val text: String) : EditorCommand
     data class Insert(val text: String) : EditorCommand
@@ -59,6 +68,7 @@ interface EditorSession {
     val state: StateFlow<EditorSnapshot>
 
     suspend fun execute(command: EditorCommand)
+    suspend fun find(query: String, options: SearchOptions = SearchOptions()): List<SearchMatch>
     suspend fun save()
     suspend fun close()
 }

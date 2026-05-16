@@ -10,6 +10,8 @@ import android.zero.studio.editor.api.EditorSnapshot
 import android.zero.studio.editor.api.EditorWorkspace
 import android.zero.studio.editor.api.LineEnding
 import android.zero.studio.editor.api.SessionId
+import android.zero.studio.editor.api.SearchMatch
+import android.zero.studio.editor.api.SearchOptions
 import android.zero.studio.editor.api.TextRange
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -106,6 +108,27 @@ class InMemoryEditorSession(
             EditorCommand.Redo -> redo()
             EditorCommand.Save -> save()
         }
+    }
+
+
+    override suspend fun find(query: String, options: SearchOptions): List<SearchMatch> {
+        ensureOpen()
+        if (query.isEmpty()) return emptyList()
+
+        val source = state.value.text
+        val haystack = if (options.caseSensitive) source else source.lowercase()
+        val needle = if (options.caseSensitive) query else query.lowercase()
+
+        var from = 0
+        val matches = mutableListOf<SearchMatch>()
+        while (from < haystack.length) {
+            val idx = haystack.indexOf(needle, startIndex = from)
+            if (idx < 0) break
+            val end = idx + needle.length
+            matches += SearchMatch(TextRange(idx, end), source.substring(idx, end))
+            from = end
+        }
+        return matches
     }
 
     override suspend fun save() {
