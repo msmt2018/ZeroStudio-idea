@@ -8,4 +8,7 @@ kotlin {
 
 dependencies {
     implementation(project(":core:editor-api"))
+
+    testImplementation(kotlin("test"))
+    testImplementation(libs.kotlinx.coroutines.test)
 }
