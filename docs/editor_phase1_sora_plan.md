@@ -35,3 +35,9 @@
 - 能在 UI 中打开 session 并实时编辑。
 - Undo/Redo/Save/Find 与快捷键映射可通过 UI 触发。
 - 文本输入时无明显卡顿（基础可用）。
+
+
+### Step 1.5：会话持久化前置（已启动）
+1. [x] 新增 `EditorDocumentStore` 持久化抽象。
+2. [x] 新增 `FileEditorDocumentStore` 文件读写实现（JVM 参考版）。
+3. [x] 新增 `PersistentEditorSessionFactory`，支持从路径加载会话。
