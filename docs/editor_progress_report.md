@@ -83,3 +83,9 @@
 - D2: 新增 `EditorViewModel` + Compose 协调页面（打开/保存/命令面板）。
 - D3: 补齐 wrapper 与基础 CI 脚本，确保 `:core:editor-impl:test` 自动执行。
 - D4~D5: 增加性能压测样例（100KB/1MB/5MB 文本）与指标上报。
+
+
+## 9) Editor Core 完成门禁
+
+- 已新增 `editor_core_completion_gate.md` 与 `EditorCoreReadinessUseCase`。
+- 当前判定：`editor-api/impl` 前提条件已满足，可进入 app 模块深度集成阶段。
