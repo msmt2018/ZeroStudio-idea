@@ -138,3 +138,13 @@
 1. [x] 新增 `ExportEditorStateUseCase`，支持导出当前会话快照。
 2. [x] 新增 `EditorSummaryReportBuilder`，聚合会话与指标生成 markdown 报告。
 3. [x] 新增导出/报告测试，覆盖 dirty 状态与 metrics 内容。
+
+
+### Step 3.2：会话质量校验（已启动）
+1. [x] 新增 `ValidateEditorSessionsUseCase`，支持对已打开会话进行质量检查。
+2. [x] 增加 TAB/超大文档/charset 异常检测规则。
+3. [x] 新增校验测试。
+
+### Step 3.3：阶段进度程序化表达（已启动）
+1. [x] 新增 `EditorPhasePlanProgress`，在代码层给出阶段 checkpoint 与完成率。
+2. [x] 新增进度测试，验证完成率计算。
