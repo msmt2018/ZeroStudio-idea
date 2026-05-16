@@ -94,3 +94,10 @@
 2. [x] 新增 `CloseEditorSessionUseCase`，统一关闭会话入口。
 3. [x] 新增 `RecentFilesUseCase`，支持 recent 列表展示与清空。
 4. [x] 新增对应测试，覆盖 active/dirty、关闭、recent 清空。
+
+
+### Step 2.5：编辑器偏好与策略门控（已启动）
+1. [x] 新增 `EditorPreferencesStore` 与 `EditorPreferences`（自动保存、recent 容量等）。
+2. [x] 新增 `SmartEditorAutosaveController`，按偏好门控 autosave 触发。
+3. [x] 新增 `LimitedRecentFilesStore`，按偏好动态限制 recent 列表容量。
+4. [x] 新增偏好/自动保存/recent 策略测试。
