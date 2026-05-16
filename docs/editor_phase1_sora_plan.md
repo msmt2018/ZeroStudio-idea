@@ -126,3 +126,9 @@
 1. [x] 新增 `EditorRecoveryStore` 与 `RecoverySnapshot`。
 2. [x] 新增 `CaptureRecoveryUseCase` / `RestoreRecoveryUseCase`。
 3. [x] 新增 recovery 测试，覆盖捕获与重建会话。
+
+
+### Step 3.0：命令面板入口（已启动）
+1. [x] 新增 `CommandPaletteUseCase` 与 `CommandPaletteItem`。
+2. [x] 提供内置命令（Save Dirty / Close All）与执行分发。
+3. [x] 新增命令面板测试，覆盖 list/execute/unknown。
