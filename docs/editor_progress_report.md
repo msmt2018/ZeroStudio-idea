@@ -63,3 +63,23 @@
 
 - ✅ 已新增 `SoraEditorBridge` 骨架实现（无三方依赖版），明确绑定/解绑/快照同步生命周期。
 - ✅ 已新增 `editor_phase1_sora_plan.md`，定义 Sora 接入四步法与验收标准。
+
+
+## 8) 下一阶段未完成工作（截至 2026-05-16）
+
+### 已完成（Phase 1/2 近期待办）
+- Step 2.3 ~ 2.9 已实现（recent / session list / preferences / search / batch / metrics / recovery）。
+- Step 3.0 ~ 3.5 已实现（command palette / runtime report / validation / symbol index / bulk replace）。
+
+### 仍未完成（高优先）
+1. **真实 Sora 依赖接入**：当前 `SoraEditorBridge` 仍是无三方依赖骨架，尚未调用真实 `CodeEditor` API。
+2. **Android UI 层落地**：尚未新增 Compose/Fragment 页面与 ViewModel 实际装配代码。
+3. **Gradle Wrapper 缺失**：仓库仍无 `./gradlew`，CI 无法直接执行测试任务。
+4. **持久化增强**：缺少 crash-safe journal、增量快照与恢复冲突处理。
+5. **大文件性能策略**：尚未落地分块加载、后台索引限流、增量高亮联调。
+
+### 建议下一个冲刺（3~5天）
+- D1: 引入 Sora 依赖并完成 `SoraEditorBridge` 真正渲染与事件回传。
+- D2: 新增 `EditorViewModel` + Compose 协调页面（打开/保存/命令面板）。
+- D3: 补齐 wrapper 与基础 CI 脚本，确保 `:core:editor-impl:test` 自动执行。
+- D4~D5: 增加性能压测样例（100KB/1MB/5MB 文本）与指标上报。

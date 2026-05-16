@@ -154,3 +154,9 @@
 1. [x] 新增 `IndexWorkspaceSymbolsUseCase` 与 `IndexedSymbol` 模型。
 2. [x] 新增 `WorkspaceSymbolIndexer`，支持重建索引与前缀检索。
 3. [x] 新增符号索引测试，覆盖 class/fun 解析与 prefix 过滤。
+
+
+### Step 3.5：工作区批量替换（已启动）
+1. [x] 新增 `BulkReplaceInWorkspaceUseCase` 与请求/结果模型。
+2. [x] 支持大小写策略与跨会话批量替换。
+3. [x] 新增 bulk replace 测试，覆盖计数与空查询短路。
