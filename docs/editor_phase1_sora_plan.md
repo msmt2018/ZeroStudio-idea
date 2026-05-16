@@ -75,3 +75,9 @@
 1. [x] 新增 `EditorCoordinator` / `EditorUiState`，统一 UI 观察状态。
 2. [x] 新增 `EditorCoordinatorImpl`，串联 open/save usecases 与 workspace。
 3. [x] 新增 coordinator 测试，校验 open/save 后 uiState 刷新。
+
+
+### Step 2.2：自动保存控制器（已启动）
+1. [x] 新增 `EditorAutosaveController` 抽象。
+2. [x] 新增 `EditorAutosaveControllerImpl`，支持仅保存 dirty 且 file-backed 会话。
+3. [x] 新增 autosave 测试，覆盖 dirty/clean/scratch 三类会话。
