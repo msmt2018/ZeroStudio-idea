@@ -71,6 +71,10 @@
 - `:build:tooling-api:model`
 - `:build:tooling-api:plugin`
 - `:build:tooling-api:plugin-config`
+- `:build:bazel-api:api`
+- `:build:bazel-api:events`
+- `:build:bazel-api:impl`
+- `:build:bazel-api:model`
 - `:feature:home`
 - `:feature:filetree`
 - `:feature:editor`
@@ -258,6 +262,30 @@
 - 工作流任务（建议写入 CI/自动化脚本）：
   - 拉取 Bazel 源码 -> 选择版本 -> 配置交叉编译 -> 产物验签 -> rootfs 集成测试
 
+### E.1 Bazel 专项模块（api/events/impl/model）与“可直接复用”的驱动接口
+
+你要求的 Bazel 模块建议独立于通用 tooling-api，避免和 Gradle 语义混杂：
+
+- `:build:bazel-api:api`
+  - `BazelBuildService`、`BazelCommand`、`BazelSession`、`BazelWorkspaceSyncApi`
+- `:build:bazel-api:events`
+  - `BazelStarted`、`BazelProgress`、`BazelStdout`、`BazelStderr`、`BazelBepEvent`、`BazelFinished`、`BazelFailed`
+- `:build:bazel-api:impl`
+  - `BazelDriverImpl`（rootfs 终端执行）
+  - `BazelBspAdapter`（通过 BSP 暴露给 IDE）
+  - `BazelBepParser`（解析 Build Event Protocol）
+- `:build:bazel-api:model`
+  - `BazelTarget`、`BazelPackage`、`BazelWorkspaceModel`、`BazelActionGraphModel`
+
+如果要找“类似 Gradle Tooling API 可以直接拿来用”的 Bazel 驱动接口，优先级建议：
+
+1. **BSP 生态实现（优先）**：通过现成 Bazel BSP Server/适配器接入，IDE 端走统一 BSP 客户端。
+2. **BEP（Build Event Protocol）**：Bazel 官方事件流接口，适合构建进度/测试结果/日志结构化回传。
+3. **`bazel query / aquery / cquery`**：用于项目模型、依赖图、动作图抽取（可落地到 `:build:bazel-api:model`）。
+4. **Starlark/Aspect 扩展**：用于补充 IDE 需要的元数据导出。
+
+> 结论：Bazel 没有与 Gradle Tooling API 完全同形态的单一官方 API；最佳实践是“**BSP + BEP + query 系列命令**”组合驱动。
+
 ### F. 统一构建生命周期（UI 到终端）
 1. 用户在 IDE 点击“构建/运行”。
 2. `BuildOrchestrator` 读取设置（构建系统 + 协议）。
@@ -328,6 +356,7 @@
 - 完成 tooling-api 六模块（api/events/impl/model/plugin/plugin-config）。
 - Gradle Tooling API 服务化接入（ForegroundService + 通知 + 取消/重试）。
 - BSP 默认驱动 + 设置页协议切换（BSP/JPS/Custom 预留）。
+- Bazel 四模块落地（:build:bazel-api:api/events/impl/model）并接入 BSP + BEP + query。
 - Bazel rootfs 驱动 PoC 与可行性报告（必要时进入源码交叉编译专项）。
 - Action 插件市场雏形。
 
