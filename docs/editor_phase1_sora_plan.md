@@ -5,6 +5,13 @@
 
 ## 分阶段任务
 
+### Step 0：桥接骨架与可测试性（已完成）
+1. [x] 引入 `SoraEditorBridge` 生命周期管理（bind/unbind）。
+2. [x] 增加状态订阅与渲染注入点（`EditorRenderer`）。
+3. [x] 增加上行事件入口（text/cursor/save）。
+4. [x] 增加桥接层单元测试（`SoraEditorBridgeTest`）。
+
+
 ### Step 1：依赖接入与模块边界
 1. 在 `:core:editor-impl` 增加 Sora 依赖（仅 impl 层依赖，api 层保持纯净）。
 2. 保持 `EditorViewAdapter` 不变，新增 `SoraEditorBridge` 真实实现。
