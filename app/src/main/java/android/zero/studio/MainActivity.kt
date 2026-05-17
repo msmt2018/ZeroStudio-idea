@@ -12,33 +12,32 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import android.zero.studio.editor.impl.InMemoryEditorWorkspace
+import androidx.lifecycle.viewmodel.compose.viewModel
+import android.zero.studio.editor.editor.EditorHostViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { EditorCoreHomeScreen() }
+        setContent { EditorHostScreen() }
     }
 }
 
 @Composable
-private fun EditorCoreHomeScreen() {
-    var status by remember { mutableStateOf("Editor Core Ready") }
+private fun EditorHostScreen(vm: EditorHostViewModel = viewModel()) {
+    val ui by vm.uiState.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Text(text = status, style = MaterialTheme.typography.titleMedium)
-        Button(onClick = {
-            status = runCatching {
-                // 仅验证 editor-core 能被 app 层装配调用
-                InMemoryEditorWorkspace().hashCode()
-                "Editor Workspace Bootstrapped"
-            }.getOrElse { "Bootstrap Failed: ${it.message}" }
-        }) {
-            Text("Bootstrap Editor Core")
-        }
+        Text(text = ui.status, style = MaterialTheme.typography.titleMedium)
+        Text(text = "Open: ${ui.openCount}")
+        Text(text = "Active: ${ui.activeFile ?: "<none>"}")
+
+        Button(onClick = { vm.open("/tmp/demo.txt") }) { Text("Open Demo") }
+        Button(onClick = { vm.search("hello") }) { Text("Search hello") }
+        Button(onClick = { vm.replaceHelloToHi() }) { Text("Replace hello->hi") }
+        Button(onClick = { vm.saveDirty() }) { Text("Save Dirty") }
     }
 }

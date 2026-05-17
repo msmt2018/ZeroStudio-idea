@@ -166,3 +166,9 @@
 1. [x] 新增 `EditorOpenFilesService`，统一 open/openMany 入口。
 2. [x] 新增 `EditorCoreFacade` + `EditorCoreFacadeFactory`，聚合核心用例装配。
 3. [x] 新增 facade/service 测试，验证可用性与搜索/导出链路。
+
+
+### Step 3.7：App ViewModel 装配落地（已启动）
+1. [x] 新增 `EditorHostViewModel`，接入 facade + coordinator + search/replace/save 命令。
+2. [x] MainActivity 升级为 EditorHostScreen，使用 ViewModel 驱动状态。
+3. [x] 建立 app -> core 的真实调用路径（open/search/replace/save）。
