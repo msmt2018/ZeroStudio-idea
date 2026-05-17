@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -34,10 +36,12 @@ private fun EditorHostScreen(vm: EditorHostViewModel = viewModel()) {
         Text(text = ui.status, style = MaterialTheme.typography.titleMedium)
         Text(text = "Open: ${ui.openCount}")
         Text(text = "Active: ${ui.activeFile ?: "<none>"}")
+        Text(text = "Report: ${ui.lastReportPreview}")
 
         Button(onClick = { vm.open("/tmp/demo.txt") }) { Text("Open Demo") }
         Button(onClick = { vm.search("hello") }) { Text("Search hello") }
         Button(onClick = { vm.replaceHelloToHi() }) { Text("Replace hello->hi") }
         Button(onClick = { vm.saveDirty() }) { Text("Save Dirty") }
+        Button(onClick = { vm.exportReport() }) { Text("Export Report") }
     }
 }

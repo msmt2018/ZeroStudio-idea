@@ -172,3 +172,9 @@
 1. [x] 新增 `EditorHostViewModel`，接入 facade + coordinator + search/replace/save 命令。
 2. [x] MainActivity 升级为 EditorHostScreen，使用 ViewModel 驱动状态。
 3. [x] 建立 app -> core 的真实调用路径（open/search/replace/save）。
+
+
+### Step 3.8：App 控制器层与报告导出入口（已启动）
+1. [x] 新增 `EditorHostController`，封装 open/search/replace/save/report 动作。
+2. [x] `EditorHostViewModel` 改为通过 controller 编排核心能力。
+3. [x] MainActivity 新增 report 导出入口并展示预览。
